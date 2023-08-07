@@ -3,7 +3,7 @@ pragma solidity >=0.6.2 <0.9.0;
 
 pragma experimental ABIEncoderV2;
 
-abstract contract StdInvariant {
+contract InvariantTest {
     struct FuzzSelector {
         address addr;
         bytes4[] selectors;
@@ -31,10 +31,6 @@ abstract contract StdInvariant {
         _excludedSenders.push(newExcludedSender_);
     }
 
-    function excludeArtifact(string memory newExcludedArtifact_) internal {
-        _excludedArtifacts.push(newExcludedArtifact_);
-    }
-
     function targetArtifact(string memory newTargetedArtifact_) internal {
         _targetedArtifacts.push(newTargetedArtifact_);
     }
@@ -57,6 +53,10 @@ abstract contract StdInvariant {
 
     // Functions for forge:
     // These are called by forge to run invariant tests and don't need to be called in tests.
+
+    function excludeArtifact(string memory newExcludedArtifact_) internal {
+        _excludedArtifacts.push(newExcludedArtifact_);
+    }
 
     function excludeArtifacts() public view returns (string[] memory excludedArtifacts_) {
         excludedArtifacts_ = _excludedArtifacts;
