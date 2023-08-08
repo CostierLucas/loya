@@ -48,6 +48,7 @@ export default function Home() {
   const privateKeyProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
+        CHAIN_NAMESPACES.EIP155,
         chainId: "0x5",
         // https://chainlist.org/
         rpcTarget: "https://rpc.ankr.com/eth_goerli",
