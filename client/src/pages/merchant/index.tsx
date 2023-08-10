@@ -15,7 +15,7 @@ const Customer = () => {
 
 const Customers = () => {
   return (
-    <div className="w-1/2">
+    <div className="w-full lg:w-1/2">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-end gap-4">
           <span className="text-[112px] leading-none">60</span>
@@ -131,9 +131,9 @@ export default function Home() {
       <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-10">
         <Header />
 
-        <div className="mt-20 flex w-full items-start justify-between">
+        <div className="mt-20 flex w-full flex-col items-start justify-between lg:flex-row">
           <Customers />
-          <div className="flex w-1/3 flex-col gap-12">
+          <div className="flex w-full flex-col gap-12 lg:w-1/3">
             <Programs />
             <Campaigns />
           </div>
