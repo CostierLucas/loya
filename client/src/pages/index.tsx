@@ -48,11 +48,11 @@ export default function Home() {
   const privateKeyProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
-        CHAIN_NAMESPACES.EIP155,
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: "0x5",
         // https://chainlist.org/
         rpcTarget: "https://rpc.ankr.com/eth_goerli",
-        displayName: "Ethereum Mainnet",
+        displayName: "Ethereum Goerli",
         blockExplorer: "https://goerli.etherscan.io",
         ticker: "ETH",
         tickerName: "Ethereum",
@@ -73,6 +73,7 @@ export default function Home() {
     },
     privateKeyProvider,
   });
+
   const web3AuthConfig: Web3AuthConfig = {
     txServiceUrl: "https://safe-transaction-goerli.safe.global",
   };
