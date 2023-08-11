@@ -1,11 +1,11 @@
 import Head from "next/head";
 import { Web3AuthModalPack, type Web3AuthConfig } from "@safe-global/auth-kit";
 import { type Web3AuthOptions } from "@web3auth/modal";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import {
   ADAPTER_EVENTS,
   CHAIN_NAMESPACES,
+  type SafeEventEmitterProvider,
   WALLET_ADAPTERS,
 } from "@web3auth/base";
 import { env } from "~/env.mjs";
@@ -16,101 +16,104 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [signedIn, setSignedIn] = useState(false);
+  const [safeAuth, setSafeAuth] = useState<Web3AuthModalPack | null>();
+  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>();
 
-  // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#arguments
-  const options: Web3AuthOptions = {
-    clientId: env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID, // https://dashboard.web3auth.io/
-    web3AuthNetwork: "testnet",
-    chainConfig: {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0x5",
-      // https://chainlist.org/
-      rpcTarget: "https://rpc.ankr.com/eth_goerli",
-    },
-    uiConfig: {
-      loginMethodsOrder: ["google", "facebook"],
-    },
-  };
-
-  // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#configuring-adapters
-  const modalConfig = {
-    [WALLET_ADAPTERS.TORUS_EVM]: {
-      label: "torus",
-      showOnModal: false,
-    },
-    [WALLET_ADAPTERS.METAMASK]: {
-      label: "metamask",
-      showOnDesktop: true,
-      showOnMobile: false,
-    },
-  };
-
-  const privateKeyProvider = new EthereumPrivateKeyProvider({
-    config: {
-      chainConfig: {
-        chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: "0x5",
-        // https://chainlist.org/
-        rpcTarget: "https://rpc.ankr.com/eth_goerli",
-        displayName: "Ethereum Goerli",
-        blockExplorer: "https://goerli.etherscan.io",
-        ticker: "ETH",
-        tickerName: "Ethereum",
-      },
-    },
-  });
-
-  // https://web3auth.io/docs/sdk/pnp/web/modal/whitelabel#whitelabeling-while-modal-initialization
-  const openloginAdapter = new OpenloginAdapter({
-    loginSettings: {
-      mfaLevel: "mandatory",
-    },
-    adapterSettings: {
-      uxMode: "popup",
-      whiteLabel: {
-        name: "Loya",
-      },
-    },
-    privateKeyProvider,
-  });
-
-  const web3AuthConfig: Web3AuthConfig = {
-    txServiceUrl: "https://safe-transaction-goerli.safe.global",
-  };
-
-  // Instantiate and initialize the pack
-  const web3AuthModalPack = new Web3AuthModalPack(web3AuthConfig);
-
-  web3AuthModalPack.subscribe(ADAPTER_EVENTS.CONNECTED, () => {
-    console.log("User is authenticated");
-    setSignedIn(true);
-  });
-
-  web3AuthModalPack.subscribe(ADAPTER_EVENTS.DISCONNECTED, () => {
-    console.log("User is not authenticated");
-    setSignedIn(false);
-  });
-
-  async function SignIn() {
-    const authKitSignData = await web3AuthModalPack.signIn();
+  async function signIn() {
+    if (!safeAuth) {
+      console.log("Web3Auth not initialized");
+      return;
+    }
+    const authKitSignData = await safeAuth.signIn();
     console.log("Signed In: ", authKitSignData);
+    const userInfo = await safeAuth.getUserInfo();
+    console.log("User Info: ", userInfo);
+    setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
     setSignedIn(true);
   }
 
-  async function SignOut() {
-    await web3AuthModalPack.signOut();
+  async function signOut() {
+    if (!safeAuth) {
+      console.log("Web3Auth not initialized");
+      return;
+    }
+    await safeAuth.signOut();
     console.log("Signed Out ");
     setSignedIn(false);
   }
 
   useEffect(() => {
-    async function init() {
-      await web3AuthModalPack.init({
-        options,
-        adapters: [openloginAdapter],
-        modalConfig,
-      });
-    }
+    // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#arguments
+    const options: Web3AuthOptions = {
+      clientId: env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID, // https://dashboard.web3auth.io/
+      chainConfig: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: "0x5",
+        // https://chainlist.org/
+        rpcTarget: "https://rpc.ankr.com/eth_goerli",
+      },
+      uiConfig: {
+        theme: "dark",
+        loginMethodsOrder: ["github", "google"],
+        defaultLanguage: "en",
+        appLogo: "https://web3auth.io/images/w3a-L-Favicon-1.svg", // Your App Logo Here
+      },
+      web3AuthNetwork: "cyan",
+    };
+
+    // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#configuring-adapters
+    const modalConfig = {
+      [WALLET_ADAPTERS.TORUS_EVM]: {
+        label: "torus",
+        showOnModal: false,
+      },
+      [WALLET_ADAPTERS.METAMASK]: {
+        label: "metamask",
+        showOnDesktop: true,
+        showOnMobile: false,
+      },
+    };
+
+    // https://web3auth.io/docs/sdk/pnp/web/modal/whitelabel#whitelabeling-while-modal-initialization
+    const openloginAdapter = new OpenloginAdapter({
+      loginSettings: {
+        mfaLevel: "default",
+      },
+      adapterSettings: {
+        uxMode: "redirect",
+        whiteLabel: {
+          name: "Safe",
+        },
+      },
+    });
+
+    const init = async () => {
+      try {
+        const web3AuthConfig: Web3AuthConfig = {
+          txServiceUrl: "https://safe-transaction-goerli.safe.global",
+        };
+
+        const web3AuthModalPack = new Web3AuthModalPack(web3AuthConfig);
+        await web3AuthModalPack.init({
+          options,
+          adapters: [openloginAdapter],
+          modalConfig,
+        });
+        web3AuthModalPack.subscribe(ADAPTER_EVENTS.CONNECTED, () => {
+          console.log("User is authenticated");
+          setSignedIn(true);
+        });
+
+        web3AuthModalPack.subscribe(ADAPTER_EVENTS.DISCONNECTED, () => {
+          console.log("User is not authenticated");
+          setSignedIn(false);
+        });
+
+        setSafeAuth(web3AuthModalPack);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     void init();
   }, []);
 
@@ -129,14 +132,14 @@ export default function Home() {
         {!signedIn ? (
           <button
             className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90"
-            onClick={() => void SignIn()}
+            onClick={() => void signIn()}
           >
             Sign In
           </button>
         ) : (
           <button
             className="rounded-2xl bg-slate-200 px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
-            onClick={() => void SignOut()}
+            onClick={() => void signOut()}
           >
             Sign Out
           </button>
