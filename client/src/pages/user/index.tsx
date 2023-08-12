@@ -7,6 +7,8 @@ import { useAtom, useAtomValue } from "jotai";
 import { safeAuthAtom } from "../_app";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import LoyaPoint from "public/icons/loya-point";
+import LoyaltyCard from "~/components/LoyaltyCard";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -54,46 +56,6 @@ const SettingsMenu = () => {
   );
 };
 
-const Cards = () => {
-  return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-end gap-4">
-          <span className="text-[112px] leading-none">1</span>
-          <span className="pb-2">Loyalty Card</span>
-        </div>
-      </div>
-
-      <div
-        className="mt-4 flex aspect-video w-full flex-col items-center justify-center rounded-3xl bg-[#FFEDE6] px-8 py-4"
-        onClick={() => console.log("Loyalty card view")}
-      >
-        <div className="flex w-full items-center justify-between">
-          <Image
-            src="/business-logo.png"
-            alt="Business"
-            width={90}
-            height={70}
-          />
-          <span>1 reward</span>
-        </div>
-        <div className="mt-8 grid w-full grid-cols-5 grid-rows-2 justify-items-center gap-4">
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-          <div className="h-10 w-10 rounded-full border border-brand-black" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Rewards = () => {
   return (
     <div className="w-full">
@@ -125,7 +87,7 @@ export default function Home() {
       <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-10">
         <Header />
         <div className="flex w-full flex-col gap-16 lg:flex-row">
-          <Cards />
+          <LoyaltyCard />
           <Rewards />
         </div>
       </main>
