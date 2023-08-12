@@ -11,6 +11,10 @@ import {
 import { env } from "~/env.mjs";
 import { Logo } from "public/logo";
 import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { api } from "~/utils/api";
+import { SiweMessage } from "siwe";
+import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 
 //https://docs.safe.global/safe-core-aa-sdk/auth-kit/web3auth
 
@@ -18,14 +22,51 @@ export default function Home() {
   const [signedIn, setSignedIn] = useState(false);
   const [safeAuth, setSafeAuth] = useState<Web3AuthModalPack | null>();
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>();
+  const { data: session } = useSession();
+  const { data: userData } = api.user.getUserData.useQuery(undefined, {
+    enabled: !!session,
+  });
 
-  async function signIn() {
+  async function onSignIn() {
     if (!safeAuth) {
       console.log("Web3Auth not initialized");
       return;
     }
-    const authKitSignData = await safeAuth.signIn();
-    console.log("Signed In: ", authKitSignData);
+    try {
+      const authKitSignData = await safeAuth.signIn();
+      console.log("Signed In: ", authKitSignData);
+      if (authKitSignData.eoa) {
+        const provider = new ethers.providers.Web3Provider(
+          safeAuth.getProvider() as SafeEventEmitterProvider
+        );
+        const signer = provider.getSigner();
+        const network = await provider.getNetwork();
+        console.log(network);
+
+        const message = new SiweMessage({
+          domain: window.location.host,
+          address: authKitSignData.eoa,
+          statement: "Sign in with Ethereum to the app.",
+          uri: window.location.origin,
+          version: "1",
+          chainId: network.chainId ? network.chainId : 5,
+          // nonce is used from CSRF token
+          nonce: await getCsrfToken(),
+        });
+        console.log("SIWE Message: ", message);
+        const signature = await signer.signMessage(message.prepareMessage());
+        console.log("Signature: ", signature);
+        void signIn("credentials", {
+          message: JSON.stringify(message),
+          redirect: false,
+          signature,
+        });
+
+        console.log("User data from DB: ", userData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     const userInfo = await safeAuth.getUserInfo();
     console.log("User Info: ", userInfo);
     setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
@@ -132,7 +173,7 @@ export default function Home() {
         {!signedIn ? (
           <button
             className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90"
-            onClick={() => void signIn()}
+            onClick={() => void onSignIn()}
           >
             Sign In
           </button>
