@@ -1,12 +1,31 @@
 import Head from "next/head";
 import Image from "next/image";
 import PlusIcon from "public/icons/plus";
+import QRCode from "react-qr-code";
 
 const Header = () => {
   return (
     <div className="flex w-full justify-between">
       <div>Hi, name</div>
       <div>Settings</div>
+    </div>
+  );
+};
+
+const QRCodeWrapper = () => {
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <span className="text-center text-lg">
+        Show this to the <br /> merchant to get points
+      </span>
+
+      <div className="aspect-square w-2/3 rounded-2xl bg-white p-5 shadow">
+        <QRCode
+          value="0x123"
+          size={256}
+          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+        />
+      </div>
     </div>
   );
 };
@@ -81,7 +100,8 @@ export default function Home() {
 
       <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-10">
         <Header />
-        <div className="flex w-full flex-col gap-16 lg:flex-row">
+        <div className="mt-20 flex w-full flex-col gap-16 lg:flex-row">
+          <QRCodeWrapper />
           <Cards />
           <Rewards />
         </div>
