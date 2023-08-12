@@ -15,11 +15,10 @@ contract SimpleERC6551Account is IERC165, IERC1271, IERC6551Account, IERC6551Exe
 
     receive() external payable {}
 
-
     function addPoints(uint256 points) external {
         totalPoints += points;
     }
-    
+
     function subtractPoints(uint256 points) external {
         totalPoints -= points;
     }
@@ -53,11 +52,10 @@ contract SimpleERC6551Account is IERC165, IERC1271, IERC6551Account, IERC6551Exe
         return bytes4(0);
     }
 
-    function isValidSignature(bytes32 hash, bytes memory signature)
-        external
-        view
-        returns (bytes4 magicValue)
-    {
+    function isValidSignature(
+        bytes32 hash,
+        bytes memory signature
+    ) external view returns (bytes4 magicValue) {
         bool isValid = SignatureChecker.isValidSignatureNow(owner(), hash, signature);
 
         if (isValid) {
@@ -73,15 +71,7 @@ contract SimpleERC6551Account is IERC165, IERC1271, IERC6551Account, IERC6551Exe
             interfaceId == type(IERC6551Executable).interfaceId);
     }
 
-    function token()
-        public
-        view
-        returns (
-            uint256,
-            address,
-            uint256
-        )
-    {
+    function token() public view returns (uint256, address, uint256) {
         bytes memory footer = new bytes(0x60);
 
         assembly {

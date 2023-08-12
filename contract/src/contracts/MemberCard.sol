@@ -5,17 +5,37 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../interfaces/IERC6551Registry.sol";
 
 contract MemberCard is ERC721 {
+    using Counters for Counters.Counter;
     address public registry;
+    address public implementation;
+    address public business;
+    Counters.Counter private _tokenIds;
 
-    constructor(address _business) ERC721("LoyaNft", "LOYA") {}
-
-    function _requireFromBusiness() internal view {
-        require(msg.sender == _business, "only owner");
+    constructor(
+        address _business,
+        address _registry,
+        address _implementation
+    ) ERC721("LoyaNft", "LOYA") {
+        registry = _registry;
+        implementation = _implementation;
+        business = _business;
     }
 
-    function mint(address to, uint256 tokenId) external {
+    function _requireFromBusiness() internal view {
+        require(msg.sender == business, "only the business can call this function");
+    }
+
+    function mint(address to, uint256 _chainId) external {
         _requireFromBusiness();
-        _mint(to, tokenId);
-        IERC6551Registry(registry).createAccount(address(this), 5, address(this), tokenId, 0, "");
+        _safeMint(to, _tokenIds.current());
+        IERC6551Registry(registry).createAccount(
+            implementation,
+            _chainId,
+            address(this),
+            _tokenIds.current(),
+            0,
+            ""
+        );
+        _tokenIds.increment();
     }
 }
