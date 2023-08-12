@@ -69,9 +69,22 @@ export default function Home() {
           console.log("No setup");
           console.log("Redirecting to onboarding");
           router.push("/setup-account");
+        } else if (
+          userData &&
+          userData.isSetupComplete &&
+          userData.role === "MERCHANT"
+        ) {
+          console.log("Redirecting to merchant dashboard");
+          router.push("/merchant");
+        } else if (
+          userData &&
+          userData.isSetupComplete &&
+          userData.role === "USER"
+        ) {
+          console.log("Redirecting to user dashboard");
+          router.push("/user");
         } else {
-          console.log("Redirecting to dashboard");
-          // router.push("/dashboard");
+          console.log("Something went wrong");
         }
       }
     } catch (error) {
