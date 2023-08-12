@@ -15,7 +15,6 @@ contract SimpleERC6551Account is IERC165, IERC1271, IERC6551Account, IERC6551Exe
 
     receive() external payable {}
 
-
     function addPoints(uint256 points) external {
         totalPoints += points;
     }
