@@ -10,19 +10,20 @@ import {
 } from "@web3auth/base";
 import { env } from "~/env.mjs";
 import { Logo } from "public/logo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ethers } from "ethers";
 import { api } from "~/utils/api";
 import { SiweMessage } from "siwe";
 import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useAtom } from "jotai";
+import { providerAtom, safeAuthAtom } from "./_app";
 
 //https://docs.safe.global/safe-core-aa-sdk/auth-kit/web3auth
 
 export default function Home() {
-  const [signedIn, setSignedIn] = useState(false);
-  const [safeAuth, setSafeAuth] = useState<Web3AuthModalPack | null>();
-  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>();
+  const [safeAuth, setSafeAuth] = useAtom(safeAuthAtom);
+  const [provider, setProvider] = useAtom(providerAtom);
   const { data: session } = useSession();
   const { data: userData } = api.user.getUserData.useQuery(undefined, {
     enabled: !!session,
@@ -93,17 +94,6 @@ export default function Home() {
     const userInfo = await safeAuth.getUserInfo();
     console.log("User Info: ", userInfo);
     setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
-    setSignedIn(true);
-  }
-
-  async function signOut() {
-    if (!safeAuth) {
-      console.log("Web3Auth not initialized");
-      return;
-    }
-    await safeAuth.signOut();
-    console.log("Signed Out ");
-    setSignedIn(false);
   }
 
   useEffect(() => {
@@ -165,12 +155,10 @@ export default function Home() {
         });
         web3AuthModalPack.subscribe(ADAPTER_EVENTS.CONNECTED, () => {
           console.log("User is authenticated");
-          setSignedIn(true);
         });
 
         web3AuthModalPack.subscribe(ADAPTER_EVENTS.DISCONNECTED, () => {
           console.log("User is not authenticated");
-          setSignedIn(false);
         });
 
         setSafeAuth(web3AuthModalPack);
@@ -193,7 +181,7 @@ export default function Home() {
         <div className="text-brand-navy">
           <Logo />
         </div>
-        {!signedIn ? (
+        {!session ? (
           <div className="flex flex-col gap-2">
             <button
               className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90"

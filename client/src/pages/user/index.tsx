@@ -1,13 +1,56 @@
 import Head from "next/head";
 import Image from "next/image";
-import PlusIcon from "public/icons/plus";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import SettingsIcon from "public/icons/settings";
+import { signOut, useSession } from "next-auth/react";
+import { useAtom, useAtomValue } from "jotai";
+import { safeAuthAtom } from "../_app";
+import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 
 const Header = () => {
+  const { data: session } = useSession();
+  const { data: userData } = api.user.getUserData.useQuery(undefined, {
+    enabled: !!session,
+  });
+
+  const name = userData?.name || "User";
   return (
-    <div className="flex w-full justify-between">
-      <div>Hi, name</div>
-      <div>Settings</div>
+    <div className="flex w-full items-center justify-between">
+      <div>
+        <span>Hello, {name}</span>
+      </div>
+      <SettingsMenu />
     </div>
+  );
+};
+
+const SettingsMenu = () => {
+  const router = useRouter();
+  const safeAuth = useAtomValue(safeAuthAtom);
+  async function onSignOut() {
+    if (!safeAuth) {
+      console.log("Web3Auth not initialized");
+      return;
+    }
+    await safeAuth.signOut();
+    console.log("Signed Out ");
+    await signOut();
+    router.push("/");
+  }
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button>
+          <SettingsIcon />
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="m-2 flex flex-col gap-2 rounded-2xl bg-white p-4">
+          <button onClick={() => void onSignOut()}>Log Out</button>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 };
 
@@ -22,7 +65,7 @@ const Cards = () => {
       </div>
 
       <div
-        className="mt-4 flex w-full flex-col items-center justify-between rounded-3xl bg-[#FFEDE6] px-8 py-4"
+        className="mt-4 flex aspect-video w-full flex-col items-center justify-center rounded-3xl bg-[#FFEDE6] px-8 py-4"
         onClick={() => console.log("Loyalty card view")}
       >
         <div className="flex w-full items-center justify-between">
@@ -34,7 +77,7 @@ const Cards = () => {
           />
           <span>1 reward</span>
         </div>
-        <div className="mt-8 grid w-full  grid-cols-5 grid-rows-2 gap-4">
+        <div className="mt-8 grid w-full grid-cols-5 grid-rows-2 justify-items-center gap-4">
           <div className="h-10 w-10 rounded-full border border-brand-black" />
           <div className="h-10 w-10 rounded-full border border-brand-black" />
           <div className="h-10 w-10 rounded-full border border-brand-black" />

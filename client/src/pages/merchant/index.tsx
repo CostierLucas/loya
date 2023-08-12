@@ -6,19 +6,32 @@ import SettingsIcon from "public/icons/settings";
 import { useState } from "react";
 import { Drawer } from "vaul";
 
-const Customer = () => {
+const Customer = ({
+  name,
+  tokenBalance,
+  joinedDate,
+  order,
+}: {
+  name: string;
+  tokenBalance: number;
+  joinedDate: string;
+  order: number;
+}) => {
   return (
-    <div className="flex w-full justify-between border-b pb-4">
+    <div className="flex w-full items-center justify-between border-b p-4">
       <div className="flex flex-col">
-        <span className="text-xl">1. Mike</span>
-        <span>Since September 12, 2023</span>
+        <span className="text-xl">
+          {order}. {name}
+        </span>
+        <span>Since {joinedDate}</span>
       </div>
-      <span>90</span>
+      <span>{tokenBalance}</span>
     </div>
   );
 };
 
 const Customers = () => {
+  const customers = ["John", "Kevin", "Mike", "Joe"];
   return (
     <div className="w-full lg:w-1/2">
       <div className="flex w-full items-center justify-between">
@@ -34,11 +47,20 @@ const Customers = () => {
         </button>
       </div>
       <div className="mt-12 flex w-full flex-col items-center rounded-3xl bg-white px-8 py-6 shadow">
-        <div className="mb-6 flex w-full justify-between text-xl font-bold">
+        <div className="mb-2 flex w-full justify-between text-xl font-bold">
           <span>Customers (60)</span>
           <span>Visits</span>
         </div>
-        <Customer />
+        {customers.map((customer, i) => (
+          <Customer
+            key={i}
+            order={i + 1}
+            name={customer}
+            joinedDate="September 29, 2023"
+            tokenBalance={90}
+          />
+        ))}
+
         <button className="mt-6">View All</button>
       </div>
     </div>
@@ -50,7 +72,7 @@ const CreateProgram = () => {
   return (
     <Drawer.Root shouldScaleBackground>
       <Drawer.Trigger asChild>
-        <button className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90">
+        <button className="w-full rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90">
           Create A Program
         </button>
       </Drawer.Trigger>
@@ -96,28 +118,32 @@ const CreateProgram = () => {
 };
 
 const Programs = () => {
+  let program = false;
+
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col gap-8">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-end gap-4">
-          <span className="text-[112px] leading-none">1</span>
-          <span className="pb-2">Active Program</span>
-        </div>
-        <button className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-black text-white">
-          <PlusIcon />
-        </button>
-      </div>
-      <div className="my-8 flex w-full items-center justify-between rounded-3xl bg-[#BBEEFF] px-8 py-4">
-        <div className="flex flex-col">
-          <span className="uppercase text-brand-navy">Active</span>
-          <span className="text-lg">Free Ice Cream</span>
-          <span className="text-sm">10 claimed this month</span>
-        </div>
-        <div>
-          <span>on 10 visits</span>
+          <span className="text-[112px] leading-none">{program ? 1 : 0}</span>
+          <span className="pb-2">
+            {program ? "Active Program " : "Active Programs"}
+          </span>
         </div>
       </div>
-      <CreateProgram />
+      {program ? (
+        <div className=" flex w-full items-center justify-between rounded-3xl bg-[#BBEEFF] px-8 py-4">
+          <div className="flex flex-col">
+            <span className="uppercase text-brand-navy">Active</span>
+            <span className="text-lg">Free Ice Cream</span>
+            <span className="text-sm">10 claimed this month</span>
+          </div>
+          <div>
+            <span>on 10 visits</span>
+          </div>
+        </div>
+      ) : (
+        <CreateProgram />
+      )}
     </div>
   );
 };
@@ -208,10 +234,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-4 lg:p-10">
+      <main className="mb-10 flex h-full min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-4 lg:p-10">
         <Header />
 
-        <div className="mt-20 flex w-full flex-col items-start justify-between lg:flex-row">
+        <div className="mt-20 flex w-full flex-col items-start justify-between gap-12 lg:flex-row">
           <Customers />
           <div className="flex w-full flex-col gap-12 lg:w-1/3">
             <Programs />
