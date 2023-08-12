@@ -7,11 +7,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
 
 // Necessary for Next auth
 model Account {
@@ -40,19 +35,22 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// enum Role {
-//     MERCHANT
-//     USER
-// }
+enum Role {
+    MERCHANT
+    USER
+}
 
 model User {
     id            String    @id @default(cuid())
     name          String?
     address         String   @unique
-    // type         Role
+    role         Role @default(USER)
+    isSetupComplete Boolean @default(false)
     accounts      Account[]
     sessions      Session[]
+    logo String?
 }
+
 
 model VerificationToken {
     identifier String

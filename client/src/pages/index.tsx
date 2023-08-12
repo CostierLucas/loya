@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 import { api } from "~/utils/api";
 import { SiweMessage } from "siwe";
 import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 //https://docs.safe.global/safe-core-aa-sdk/auth-kit/web3auth
 
@@ -26,6 +27,7 @@ export default function Home() {
   const { data: userData } = api.user.getUserData.useQuery(undefined, {
     enabled: !!session,
   });
+  const router = useRouter();
 
   async function onSignIn() {
     if (!safeAuth) {
@@ -63,6 +65,14 @@ export default function Home() {
         });
 
         console.log("User data from DB: ", userData);
+        if (userData && !userData.isSetupComplete) {
+          console.log("No setup");
+          console.log("Redirecting to onboarding");
+          router.push("/setup-account");
+        } else {
+          console.log("Redirecting to dashboard");
+          // router.push("/dashboard");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -171,12 +181,14 @@ export default function Home() {
           <Logo />
         </div>
         {!signedIn ? (
-          <button
-            className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90"
-            onClick={() => void onSignIn()}
-          >
-            Sign In
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              className="rounded-2xl bg-brand-black px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-brand-black/90"
+              onClick={() => void onSignIn()}
+            >
+              Sign In
+            </button>
+          </div>
         ) : (
           <button
             className="rounded-2xl bg-slate-200 px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
