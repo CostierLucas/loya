@@ -1,29 +1,19 @@
 import Head from "next/head";
-import { Web3AuthModalPack, type Web3AuthConfig } from "@safe-global/auth-kit";
-import { type Web3AuthOptions } from "@web3auth/modal";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import {
-  ADAPTER_EVENTS,
-  CHAIN_NAMESPACES,
-  type SafeEventEmitterProvider,
-  WALLET_ADAPTERS,
-} from "@web3auth/base";
-import { env } from "~/env.mjs";
+import { type SafeEventEmitterProvider } from "@web3auth/base";
 import { Logo } from "public/logo";
-import { useEffect } from "react";
 import { ethers } from "ethers";
 import { api } from "~/utils/api";
 import { SiweMessage } from "siwe";
 import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useAtom } from "jotai";
-import { providerAtom, safeAuthAtom } from "./_app";
+import { useAtom, useAtomValue } from "jotai";
+import { useContext } from "react";
+import { SafeAuthContext } from "~/context/SafeAuthContext";
 
 //https://docs.safe.global/safe-core-aa-sdk/auth-kit/web3auth
 
 export default function Home() {
-  const [safeAuth, setSafeAuth] = useAtom(safeAuthAtom);
-  const [provider, setProvider] = useAtom(providerAtom);
+  const { safeAuth } = useContext(SafeAuthContext);
   const { data: session } = useSession();
   const { data: userData } = api.user.getUserData.useQuery(undefined, {
     enabled: !!session,
@@ -93,81 +83,7 @@ export default function Home() {
     }
     const userInfo = await safeAuth.getUserInfo();
     console.log("User Info: ", userInfo);
-    setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
   }
-
-  useEffect(() => {
-    // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#arguments
-    const options: Web3AuthOptions = {
-      clientId: env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID, // https://dashboard.web3auth.io/
-      chainConfig: {
-        chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: "0x5",
-        // https://chainlist.org/
-        rpcTarget: "https://rpc.ankr.com/eth_goerli",
-      },
-      uiConfig: {
-        theme: "dark",
-        loginMethodsOrder: ["github", "google"],
-        defaultLanguage: "en",
-        appLogo: "https://web3auth.io/images/w3a-L-Favicon-1.svg", // Your App Logo Here
-      },
-      web3AuthNetwork: "cyan",
-    };
-
-    // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#configuring-adapters
-    const modalConfig = {
-      [WALLET_ADAPTERS.TORUS_EVM]: {
-        label: "torus",
-        showOnModal: false,
-      },
-      [WALLET_ADAPTERS.METAMASK]: {
-        label: "metamask",
-        showOnDesktop: true,
-        showOnMobile: false,
-      },
-    };
-
-    // https://web3auth.io/docs/sdk/pnp/web/modal/whitelabel#whitelabeling-while-modal-initialization
-    const openloginAdapter = new OpenloginAdapter({
-      loginSettings: {
-        mfaLevel: "default",
-      },
-      adapterSettings: {
-        uxMode: "redirect",
-        whiteLabel: {
-          name: "Safe",
-        },
-      },
-    });
-
-    const init = async () => {
-      try {
-        const web3AuthConfig: Web3AuthConfig = {
-          txServiceUrl: "https://safe-transaction-goerli.safe.global",
-        };
-
-        const web3AuthModalPack = new Web3AuthModalPack(web3AuthConfig);
-        await web3AuthModalPack.init({
-          options,
-          adapters: [openloginAdapter],
-          modalConfig,
-        });
-        web3AuthModalPack.subscribe(ADAPTER_EVENTS.CONNECTED, () => {
-          console.log("User is authenticated");
-        });
-
-        web3AuthModalPack.subscribe(ADAPTER_EVENTS.DISCONNECTED, () => {
-          console.log("User is not authenticated");
-        });
-
-        setSafeAuth(web3AuthModalPack);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    void init();
-  }, []);
 
   return (
     <>

@@ -6,6 +6,18 @@ import PlusIcon from "public/icons/plus";
 import SettingsIcon from "public/icons/settings";
 import { useState } from "react";
 import { Drawer } from "vaul";
+import { env } from "~/env.mjs";
+import { ethers } from "ethers";
+import { GelatoRelayPack } from "@safe-global/relay-kit";
+import Safe, {
+  EthersAdapter,
+  getSafeContract,
+} from "@safe-global/protocol-kit";
+import {
+  MetaTransactionData,
+  MetaTransactionOptions,
+  OperationType,
+} from "@safe-global/safe-core-sdk-types";
 
 const Customer = ({
   name,
@@ -70,6 +82,68 @@ const Customers = () => {
 
 const CreateProgram = () => {
   const [name, setName] = useState("");
+
+  // async function create() {
+  //   console.log("Creating program...");
+  //   //Use https://docs.safe.global/safe-core-aa-sdk/relay-kit/gelato#gelato-1balance
+
+  //   //https://chainlist.org
+  //   const RPC_URL = "https://goerli.base.org";
+  //   const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+  //   const signer = new ethers.Wallet(
+  //     process.env.OWNER_1_PRIVATE_KEY!,
+  //     provider
+  //   );
+  //   const chainId = 84531;
+  //   const gasLimit = "100000"; // Depends on the contract interaction
+
+  //   // Create a transaction object
+  //   const safeTransactionData: MetaTransactionData = {
+  //     data: "0x",
+  //     value: 0,
+  //     operation: OperationType.Call,
+  //   };
+
+  //   const options: MetaTransactionOptions = {
+  //     gasLimit,
+  //     isSponsored: true,
+  //   };
+
+  //   const ethAdapter = new EthersAdapter({
+  //     ethers,
+  //     signerOrProvider: signer,
+  //   });
+
+  //   const safeSDK = await Safe.create({
+  //     ethAdapter,
+  //     safeAddress,
+  //   });
+
+  //   const relayKit = new GelatoRelayPack(env.NEXT_PUBLIC_GELATO_RELAY_API_KEY);
+
+  //   const safeTransaction = await safeSDK.createTransaction({
+  //     safeTransactionData,
+  //   });
+
+  //   const signedSafeTx = await safeSDK.signTransaction(safeTransaction);
+  //   const safeSingletonContract = await getSafeContract({
+  //     ethAdapter,
+  //     safeVersion: await safeSDK.getContractVersion(),
+  //   });
+
+  //   const relayTransaction: RelayTransaction = {
+  //     target: safeAddress,
+  //     encodedTransaction: encodedTx,
+  //     chainId,
+  //     options,
+  //   };
+  //   const response = await relayKit.relayTransaction(relayTransaction);
+
+  //   console.log(
+  //     `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+  //   );
+  // }
+
   return (
     <Drawer.Root shouldScaleBackground>
       <Drawer.Trigger asChild>

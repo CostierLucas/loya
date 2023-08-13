@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import LoyaPoint from "public/icons/loya-point";
 import LoyaltyCard from "~/components/LoyaltyCard";
+import { useAccount } from "wagmi";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -76,6 +77,8 @@ const Rewards = () => {
 };
 
 export default function Home() {
+  const { address, isConnecting, isDisconnected } = useAccount();
+
   return (
     <>
       <Head>
@@ -86,6 +89,7 @@ export default function Home() {
 
       <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-10">
         <Header />
+        <span>{address ? address : "not connected"}</span>
         <div className="flex w-full flex-col gap-16 lg:flex-row">
           <LoyaltyCard />
           <Rewards />

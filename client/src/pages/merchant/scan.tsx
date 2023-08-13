@@ -36,14 +36,13 @@ export default function Scan() {
   function addPoint() {
     //Use https://docs.safe.global/safe-core-aa-sdk/relay-kit/gelato#gelato-1balance
 
-    // https://chainlist.org
+    //https://chainlist.org
     // const RPC_URL = "https://endpoints.omniatech.io/v1/bsc/mainnet/public";
     // const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
     // const signer = new ethers.Wallet(
     //   process.env.OWNER_1_PRIVATE_KEY!,
     //   provider
     // );
-    // const safeAddress = "0x..."; // Safe from which the transaction will be sent
     // const chainId = 100;
     // const gasLimit = "100000"; // Depends on the contract interaction
 
