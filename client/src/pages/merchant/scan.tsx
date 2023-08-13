@@ -13,6 +13,7 @@ import {
   MetaTransactionOptions,
   OperationType,
 } from "@safe-global/safe-core-sdk-types";
+import { useState } from "react";
 
 const Header = () => {
   const router = useRouter();
@@ -31,6 +32,7 @@ const Header = () => {
 };
 
 export default function Scan() {
+  const [userAddress, setUserAddress] = useState("");
   function addPoint() {
     //Use https://docs.safe.global/safe-core-aa-sdk/relay-kit/gelato#gelato-1balance
 
@@ -46,8 +48,7 @@ export default function Scan() {
     // const gasLimit = "100000"; // Depends on the contract interaction
 
     // // Any address can be used for destination. In this example, we use vitalik.eth
-    // const destinationAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
-    // const withdrawAmount = ethers.utils.parseUnits("0.005", "ether").toString();
+    // const destinationAddress = userAddress;
 
     // Create a transaction object
     // const safeTransactionData: MetaTransactionData = {
@@ -122,7 +123,7 @@ export default function Scan() {
         <Header />
 
         <QrScanner
-          onDecode={(result) => console.log(result)}
+          onDecode={(result) => setUserAddress(result)}
           onError={(error) => console.log(error?.message)}
         />
         <button
