@@ -5,7 +5,7 @@ import LoyaPoint from "public/icons/loya-point";
 export const LoyaltyCard = () => {
   const router = useRouter();
   const requiredPoints = 10;
-  const userPoints = 1;
+  const userPoints = 3;
   const lifetimePoints = 100;
 
   const Points = () => {
@@ -39,7 +39,7 @@ export const LoyaltyCard = () => {
       </div>
 
       <div
-        className="mt-4 flex aspect-video w-full flex-col items-center justify-center rounded-3xl bg-[#FFEDE6] px-8 py-4"
+        className="mt-4 flex aspect-video w-full flex-col items-center justify-center rounded-3xl bg-[#FFEDE6] px-4 py-4"
         onClick={() => router.push("/user/card")}
       >
         <div className="flex w-full items-center justify-between">
@@ -49,9 +49,13 @@ export const LoyaltyCard = () => {
             width={90}
             height={70}
           />
-          <div className="flex flex-col items-end gap-2">
-            <span>{requiredPoints - userPoints} visits away from reward! </span>
-            <span>You accumulated {lifetimePoints} since </span>
+          <div className="flex flex-col items-end gap-2 text-right">
+            <span className="text-lg font-bold">
+              {requiredPoints - userPoints} visits away from reward!{" "}
+            </span>
+            <span className="text-sm">
+              You accumulated {lifetimePoints} visits since Sept 2023
+            </span>
           </div>
         </div>
         <div

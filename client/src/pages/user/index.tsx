@@ -1,13 +1,10 @@
 import Head from "next/head";
-import Image from "next/image";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import SettingsIcon from "public/icons/settings";
 import { signOut, useSession } from "next-auth/react";
-import { useAtom, useAtomValue } from "jotai";
-import { safeAuthAtom } from "../_app";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import LoyaPoint from "public/icons/loya-point";
+
 import LoyaltyCard from "~/components/LoyaltyCard";
 
 const Header = () => {
@@ -28,16 +25,9 @@ const Header = () => {
 };
 
 const SettingsMenu = () => {
+  const { data: session } = useSession();
   const router = useRouter();
-  const safeAuth = useAtomValue(safeAuthAtom);
   async function onSignOut() {
-    if (!safeAuth) {
-      console.log("Web3Auth not initialized");
-      return;
-    }
-    await safeAuth.signOut();
-    console.log("Signed Out ");
-    await signOut();
     router.push("/");
   }
   return (
@@ -86,7 +76,7 @@ export default function Home() {
 
       <main className="flex h-screen min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-10">
         <Header />
-        <div className="flex w-full flex-col gap-16 lg:flex-row">
+        <div className="mt-20 flex w-full flex-col gap-16 lg:flex-row">
           <LoyaltyCard />
           <Rewards />
         </div>

@@ -66,27 +66,6 @@ export default function Home() {
         });
 
         console.log("User data from DB: ", userData);
-        if (userData && !userData.isSetupComplete) {
-          console.log("No setup");
-          console.log("Redirecting to onboarding");
-          router.push("/setup-account");
-        } else if (
-          userData &&
-          userData.isSetupComplete &&
-          userData.role === "MERCHANT"
-        ) {
-          console.log("Redirecting to merchant dashboard");
-          router.push("/merchant");
-        } else if (
-          userData &&
-          userData.isSetupComplete &&
-          userData.role === "USER"
-        ) {
-          console.log("Redirecting to user dashboard");
-          router.push("/user");
-        } else {
-          console.log("Something went wrong");
-        }
       }
     } catch (error) {
       console.error(error);
@@ -95,6 +74,34 @@ export default function Home() {
     console.log("User Info: ", userInfo);
     setProvider(safeAuth.getProvider() as SafeEventEmitterProvider);
   }
+
+  // useEffect(() => {
+  //   if (!session) {
+  //     safeAuth?.signOut();
+  //     return;
+  //   }
+  //   if (userData && !userData.isSetupComplete) {
+  //     console.log("No setup");
+  //     console.log("Redirecting to onboarding");
+  //     router.push("/setup-account");
+  //   } else if (
+  //     userData &&
+  //     userData.isSetupComplete &&
+  //     userData.role === "MERCHANT"
+  //   ) {
+  //     console.log("Redirecting to merchant dashboard");
+  //     router.push("/merchant");
+  //   } else if (
+  //     userData &&
+  //     userData.isSetupComplete &&
+  //     userData.role === "USER"
+  //   ) {
+  //     console.log("Redirecting to user dashboard");
+  //     router.push("/user");
+  //   } else {
+  //     console.log("Something went wrong");
+  //   }
+  // }, [userData]);
 
   useEffect(() => {
     // https://web3auth.io/docs/sdk/pnp/web/modal/initialize#arguments
@@ -169,6 +176,11 @@ export default function Home() {
     void init();
   }, []);
 
+  async function onSignOut() {
+    await safeAuth?.signOut();
+    await signOut();
+  }
+
   return (
     <>
       <Head>
@@ -193,7 +205,7 @@ export default function Home() {
         ) : (
           <button
             className="rounded-2xl bg-slate-200 px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
-            onClick={() => void signOut()}
+            onClick={() => void onSignOut()}
           >
             Sign Out
           </button>

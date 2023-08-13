@@ -7,6 +7,8 @@ import SettingsIcon from "public/icons/settings";
 import { useState } from "react";
 import { Drawer } from "vaul";
 
+let createdProgram = false;
+
 const Customer = ({
   name,
   tokenBalance,
@@ -68,7 +70,7 @@ const Customers = () => {
   );
 };
 
-const CreateProgram = () => {
+const CreateProgram = ({ set }) => {
   const [name, setName] = useState("");
   return (
     <Drawer.Root shouldScaleBackground>
@@ -108,7 +110,10 @@ const CreateProgram = () => {
           </div>
           <button
             className="mt-16 w-full rounded-2xl bg-brand-navy px-20 py-5 text-lg leading-none text-white transition-colors hover:bg-black/90"
-            onClick={() => console.log("Creating program...")}
+            onClick={() => {
+              console.log("Creating program...");
+              set(true);
+            }}
           >
             Create Program
           </button>
@@ -119,7 +124,7 @@ const CreateProgram = () => {
 };
 
 const Programs = () => {
-  let program = false;
+  const [program, setProgram] = useState(false);
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -143,7 +148,7 @@ const Programs = () => {
           </div>
         </div>
       ) : (
-        <CreateProgram />
+        <CreateProgram set={setProgram} />
       )}
     </div>
   );
