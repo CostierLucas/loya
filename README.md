@@ -70,7 +70,7 @@ Figma
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 Contributors:
-* [Roy Sandoval, Product Designer](https://twitter.com/roysandoval_)
+* [Roy Sandoval, Front End Developer](https://twitter.com/roysandoval_)
 * [Lucas Costier, Full Stack Developer](https://twitter.com/mthacks)
 * [Taylan McRae-Yu, Product Manager](https://twitter.com/0xTAY_)
 
