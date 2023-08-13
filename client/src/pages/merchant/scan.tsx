@@ -119,19 +119,26 @@ export default function Scan() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="mb-10 flex h-full min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-4 lg:p-10">
-        <Header />
+      <main className="relative mb-10  h-full min-h-screen gap-4 bg-gradient-to-b from-brand-sky to-white to-50% p-4 lg:p-10">
+        <div className="relative z-10 w-full">
+          <Header />
+        </div>
 
         <QrScanner
           onDecode={(result) => setUserAddress(result)}
           onError={(error) => console.log(error?.message)}
+          containerStyle={{ width: "100%", height: "100%", position: "fixed" }}
+          videoStyle={{ width: "100%", height: "100%" }}
+          constraints={{ aspectRatio: 1080 / 1920 }}
         />
-        <button
-          className="rounded-2xl bg-brand-sky px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
-          onClick={() => addPoint()}
-        >
-          Sign Out
-        </button>
+        <div className="relative bottom-0 z-10 w-full">
+          <button
+            className="w-full rounded-2xl bg-brand-sky px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
+            onClick={() => addPoint()}
+          >
+            Add Point
+          </button>
+        </div>
       </main>
     </>
   );
