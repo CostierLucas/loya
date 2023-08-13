@@ -32,9 +32,6 @@ While many forms of traditional loyalty point systems exist, modern solutions ar
     - Loya allows users to choose what personal data is shared through their profile while removing the need for small businesses or intermediaries to handle and maintain customer data
 - **Make it easy and fun**!
     - Loya makes it seamless for customers and vendors to leverage the benefits of Web3 without any prior experience with crypto.
- 
-## How it's made
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -45,7 +42,7 @@ While many forms of traditional loyalty point systems exist, modern solutions ar
 Web3Auth
 
 **Which blockchain networks will your project interact with?**
-Optimism,Base, Zora, Goerli
+Optimism, Base, Zora, Goerli
 
 **Which programming languages are you using in your project?**
 Typescript and Solidity
