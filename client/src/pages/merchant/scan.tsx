@@ -131,7 +131,7 @@ export default function Scan() {
           videoStyle={{ width: "100%", height: "100%" }}
           constraints={{ aspectRatio: 1080 / 1920 }}
         />
-        <div className="relative bottom-0 z-10 w-full">
+        <div className="relative bottom-[-80vh] z-10 w-full">
           <button
             className="w-full rounded-2xl bg-brand-sky px-20 py-5 text-lg leading-none text-brand-black transition-colors hover:bg-black/90"
             onClick={() => addPoint()}

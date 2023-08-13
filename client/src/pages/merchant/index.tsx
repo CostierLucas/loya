@@ -1,6 +1,7 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import PlusIcon from "public/icons/plus";
 import SettingsIcon from "public/icons/settings";
 import { useState } from "react";
@@ -174,13 +175,31 @@ const Campaigns = () => {
   );
 };
 
-const QRScaner = () => {
+const ScanButton = () => {
+  const router = useRouter();
   return (
-    <div>
-      <button>Home</button>
-      <div>QRScaner</div>
-      <button>Add Point</button>
-    </div>
+    <button
+      className="flex h-20 w-20 items-center justify-center rounded-full  bg-brand-black"
+      onClick={() => router.push("/merchant/scan")}
+    >
+      <div>
+        <svg
+          width="52"
+          height="52"
+          viewBox="0 0 52 52"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M34.125 45.5H39.8125C41.3209 45.5 42.7676 44.9008 43.8342 43.8342C44.9008 42.7676 45.5 41.3209 45.5 39.8125V34.125M45.5 17.875V12.1875C45.5 10.6791 44.9008 9.23244 43.8342 8.16583C42.7676 7.09922 41.3209 6.5 39.8125 6.5H34.125M17.875 45.5H12.1875C10.6791 45.5 9.23244 44.9008 8.16583 43.8342C7.09922 42.7676 6.5 41.3209 6.5 39.8125V34.125M6.5 17.875V12.1875C6.5 10.6791 7.09922 9.23244 8.16583 8.16583C9.23244 7.09922 10.6791 6.5 12.1875 6.5H17.875"
+            stroke="white"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </button>
   );
 };
 
@@ -243,6 +262,9 @@ export default function Home() {
             <Programs />
             <Campaigns />
           </div>
+        </div>
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
+          <ScanButton />
         </div>
       </main>
     </>
