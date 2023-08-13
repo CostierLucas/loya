@@ -15,7 +15,7 @@
 <!-- ETH Global SuperHack Submission -->
 
 ## Short Description
-Loya is a loyalty-rewards dApp that helps small businesses reward and build stronger relationships with their best customers. Built on Optimism, Base, Zora and The Graph, Loya acts as a rewards layer between customers and merchants that can be used without any prior experience with crypto.
+Loya is a loyalty-rewards dApp that helps small businesses reward and build stronger relationships with their best customers. Built on Optimism, Base, Zora, Safe and The Graph, Loya acts as a rewards layer between customers and merchants that can be used without any prior experience with crypto.
 
 ## About Loya 
 Loya can be used on any device and allows merchants to create and manage peer-to-peer loyalty reward programs. Customers join loyalty programs by simply scanning a QR code and sign into the app with any Web2 login or EVM-compatible wallet. Through Loya’s dApp interface, users can track their rewards,  participate in different programs, and earn badges and coupons that can be redeemed for rewards. 
