@@ -71,7 +71,7 @@ Figma
 
 Contributors:
 * [Roy Sandoval, Front End Developer](https://twitter.com/roysandoval_)
-* [Lucas Costier, Full Stack Developer](https://twitter.com/mthacks)
+* Lucas Costier, Full Stack Developer
 * [Taylan McRae-Yu, Product Manager](https://twitter.com/0xTAY_)
 
 Credits: 
