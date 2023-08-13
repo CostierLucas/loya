@@ -13,11 +13,20 @@ contract Deploy is Script {
         uint256 deployerPrivateKey = vm.envUint("TESTNET_PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        new SimpleERC6551Account();
+        SimpleERC6551Account account = new SimpleERC6551Account();
 
-        new ERC6551Registry();
+        ERC6551Registry registry = new ERC6551Registry();
 
-        new FactoryERC721();
+        FactoryERC721 factory = new FactoryERC721();
+
+        factory.deployERC721(
+            address(vm),
+            address(registry),
+            address(account),
+            10,
+            "Test",
+            "TEST"
+        );
 
         vm.stopBroadcast();
     }
