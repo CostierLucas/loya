@@ -1,32 +1,35 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "../interfaces/IERC6551Registry.sol";
 
-contract MemberCard is ERC721 {
+
+contract RewardNft is ERC721, Ownable {
     using Counters for Counters.Counter;
     address public registry;
     address public implementation;
-    address public business;
+    uint256 public minimumPoints;
     Counters.Counter private _tokenIds;
 
     constructor(
         address _business,
         address _registry,
-        address _implementation
-    ) ERC721("LoyaNft", "LOYA") {
+        address _implementation,
+        uint256 _minimumPoints,
+        string memory _name,
+        string memory _symbol
+    ) ERC721(
+        _name, _symbol) {
+        minimumPoints = _minimumPoints;
         registry = _registry;
         implementation = _implementation;
-        business = _business;
-    }
-
-    function _requireFromBusiness() internal view {
-        require(msg.sender == business, "only the business can call this function");
+        transferOwnership(_business);
     }
 
     function mint(address to, uint256 _chainId) external {
-        _requireFromBusiness();
         _safeMint(to, _tokenIds.current());
         IERC6551Registry(registry).createAccount(
             implementation,
@@ -37,5 +40,10 @@ contract MemberCard is ERC721 {
             ""
         );
         _tokenIds.increment();
+    }
+
+    function burn(uint256 tokenId) external onlyOwner(){
+        require(ownerOf(tokenId) == msg.sender, "Not owner");
+        _burn(tokenId);
     }
 }
