@@ -1,7 +1,7 @@
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./RewardNft.sol";
 
-contract FactoryBusiness {
+contract FactoryERC721 {
     address[] public tokens;
 
     event ERC721Created(address owner, address tokenContract);
