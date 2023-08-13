@@ -26,11 +26,14 @@ While many forms of traditional loyalty point systems exist, modern solutions ar
 
 - **Democratize loyalty points**
     - Loya can be set up and used by anyone on any device. By leveraging the Optimism Stack businesses can use Loya without any recurring subscription or maintenance fees
+    
 - **Enhance customer experiences**
     - Loya offers customers a transparent and secure way to redeem and earn rewards while helping merchants build stronger relationships with their best customers
+   
 - **Preserve customer privacy**
     - Loya allows users to choose what personal data is shared through their profile while removing the need for small businesses or intermediaries to handle and maintain customer data
-- **Make it easy and fun**!
+
+- **Make it easy and fun!**
     - Loya makes it seamless for customers and vendors to leverage the benefits of Web3 without any prior experience with crypto.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
