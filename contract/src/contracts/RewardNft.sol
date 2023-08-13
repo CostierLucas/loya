@@ -15,6 +15,12 @@ contract RewardNft is ERC721 {
     address public owner;
     Counters.Counter private _tokenIds;
 
+    event AccountCreated(
+        address owner,
+        address account,
+        uint256 tokenId
+    );
+
     constructor(
         address _business,
         address _registry,
@@ -37,7 +43,7 @@ contract RewardNft is ERC721 {
 
     function mint(address to, uint256 _chainId) external {
         _safeMint(to, _tokenIds.current());
-        IERC6551Registry(registry).createAccount(
+        address account = IERC6551Registry(registry).createAccount(
             implementation,
             _chainId,
             address(this),
@@ -45,6 +51,7 @@ contract RewardNft is ERC721 {
             0,
             ""
         );
+        emit AccountCreated(to, account, _tokenIds.current());
         _tokenIds.increment();
     }
 
