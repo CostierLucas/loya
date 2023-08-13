@@ -9,9 +9,9 @@ contract FactoryERC721 {
     event ERC721Created(address owner, address tokenContract);
     
     function deployERC721(
+        address _business,
         address _registry,
         address _implementation,
-        address _business,
         uint256 _minimumPoints,
         string memory _name,
         string memory _symbol

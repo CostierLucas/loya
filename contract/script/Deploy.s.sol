@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 import "../src/ERC6551Registry.sol";
 import "../src/contracts/FactoryERC721.sol";
 import "../src/examples/simple/SimpleERC6551Account.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../src/contracts/RewardNft.sol";
+
 
 contract Deploy is Script {
     function run() external {
@@ -19,14 +22,17 @@ contract Deploy is Script {
 
         FactoryERC721 factory = new FactoryERC721();
 
-        factory.deployERC721(
-            address(vm),
+        address nft = factory.deployERC721(
+            address(account),
             address(registry),
             address(account),
             10,
             "Test",
             "TEST"
         );
+
+        RewardNft(nft).mint(
+            0x39f5e8C23f1a7565476B8F851c0A23911E3F6Cc2, 5);
 
         vm.stopBroadcast();
     }

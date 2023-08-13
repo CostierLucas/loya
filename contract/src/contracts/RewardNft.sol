@@ -7,11 +7,12 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "../interfaces/IERC6551Registry.sol";
 
 
-contract RewardNft is ERC721, Ownable {
+contract RewardNft is ERC721 {
     using Counters for Counters.Counter;
     address public registry;
     address public implementation;
     uint256 public minimumPoints;
+    address public owner;
     Counters.Counter private _tokenIds;
 
     constructor(
@@ -23,10 +24,15 @@ contract RewardNft is ERC721, Ownable {
         string memory _symbol
     ) ERC721(
         _name, _symbol) {
+        owner = _business;
         minimumPoints = _minimumPoints;
         registry = _registry;
         implementation = _implementation;
-        transferOwnership(_business);
+    }
+
+    modifier onlyOwner() {
+        require(owner == msg.sender, "Not owner");
+        _;
     }
 
     function mint(address to, uint256 _chainId) external {
