@@ -6,7 +6,7 @@ import "./RewardNft.sol";
 contract FactoryERC721 {
     address[] public tokens;
 
-    event ERC721Created(address owner, address tokenContract);
+    event ERC721Created(address business, address tokenContract, string name, string symbol, uint256 minimumPoints);
     
     function deployERC721(
         address _business,
@@ -25,7 +25,7 @@ contract FactoryERC721 {
             _symbol
         );
         tokens.push(address(t));
-        emit ERC721Created(msg.sender,address(t));
+        emit ERC721Created(msg.sender, address(t), _name, _symbol, _minimumPoints);
         return address(t);
     }
 }
